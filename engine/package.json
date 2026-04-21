@@ -1,0 +1,22 @@
+{
+  "name": "photovault-engine",
+  "version": "0.1.0",
+  "description": "PhotoVault Processing Engine — EXIF extraction, dedup, AI indexing, search",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "test": "node --test src/**/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.0.0",
+    "express": "^4.21.0",
+    "sharp": "^0.33.0",
+    "glob": "^10.3.0"
+  },
+  "devDependencies": {}
+}
