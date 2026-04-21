@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhotoVault MVP — Wireframe</title>
+<style>
+  :root {
+    --primary: #8E9AAF;
+    --good: #A7B5A0;
+    --bad: #C09080;
+    --bg: #F2EFEA;
+    --bg-dark: #2A2A2E;
+    --text: #4A4A50;
+    --text-secondary: #9A9A9E;
+    --border: #E0DCD6;
+    --radius: 8px;
+    --radius-sm: 4px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    background: #e8e4df;
+    color: var(--text);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+  }
+
+  h2 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  /* ===== App Shell ===== */
+  .app {
+    width: 960px;
+    height: 600px;
+    background: var(--bg);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Search Bar */
+  .search-bar {
+    height: 48px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    flex-shrink: 0;
+  }
+
+  .search-bar .icon { font-size: 14px; color: var(--text-secondary); }
+  .search-bar input {
+    flex: 1;
+    border: none;
+    background: none;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    font-family: inherit;
+  }
+  .search-bar input::placeholder { color: var(--text-secondary); }
+  .search-bar .shortcut {
+    font-size: 11px;
+    color: var(--text-secondary);
+    background: var(--border);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .search-bar .clear-btn {
+    font-size: 16px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: none;
+  }
+
+  /* Main Content */
+  .main {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 200px;
+    border-right: 1px solid var(--border);
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex-shrink: 0;
+    overflow-y: auto;
+  }
+
+  .sidebar-section h3 {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+  }
+
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    cursor: default;
+  }
+
+  .sidebar-item .emoji { font-size: 14px; }
+  .sidebar-item .label { flex: 1; }
+  .sidebar-item .meta { font-size: 11px; color: var(--text-secondary); }
+  .sidebar-item .sub { font-size: 11px; color: var(--text-secondary); padding-left: 30px; margin-top: -2px; }
+
+  .device-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 4px 0 0 30px;
+    overflow: hidden;
+  }
+  .device-bar-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 2px;
+    transition: width 0.3s;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-dot.on { background: var(--good); }
+  .status-dot.off { background: var(--border); }
+
+  .divider { height: 1px; background: var(--border); margin: 4px 0; }
+
+  /* Grid */
+  .grid-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+  }
+
+  .date-group { margin-bottom: 16px; }
+  .date-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    padding-left: 2px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+  }
+
+  .thumb {
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
+    background: var(--border);
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: box-shadow 0.15s;
+  }
+  .thumb:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .thumb.selected { box-shadow: 0 0 0 2px var(--primary); }
+  .thumb .photo {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    background: linear-gradient(135deg, #d4cfc8, #e8e4df);
+  }
+
+  .thumb .badge {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    font-size: 12px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+  }
+  .thumb .badge.good { color: var(--good); }
+  .thumb .badge.bad { color: var(--bad); }
+
+  .thumb .loading-indicator {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    font-size: 10px;
+    animation: spin 1.5s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .thumb .dup-icon {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 10px;
+    background: rgba(255,255,255,0.85);
+    border-radius: 3px;
+    padding: 1px 3px;
+  }
+
+  /* Detail Panel */
+  .detail {
+    width: 280px;
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  .detail.hidden { display: none; }
+
+  .detail-preview {
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, #c4bfb8, #d8d4cd);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .detail-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+
+  .detail-section h4 {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  .exif-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 12px;
+    font-size: 12px;
+  }
+  .exif-item .label { color: var(--text-secondary); font-size: 11px; }
+  .exif-item .value { font-weight: 500; }
+
+  .detail-desc {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .score-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .score-track {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .score-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 2px;
+  }
+
+  .mark-buttons {
+    display: flex;
+    gap: 8px;
+  }
+  .mark-btn {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: none;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .mark-btn:hover { background: rgba(0,0,0,0.03); }
+  .mark-btn.good-active { background: var(--good); color: white; border-color: var(--good); }
+  .mark-btn.bad-active { background: var(--bad); color: white; border-color: var(--bad); }
+
+  .finder-link {
+    font-size: 12px;
+    color: var(--primary);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .finder-link:hover { text-decoration: underline; }
+
+  .meta-row {
+    font-size: 11px;
+    color: var(--text-secondary);
+    display: flex;
+    gap: 12px;
+  }
+
+  /* Status Bar */
+  .status-bar {
+    height: 28px;
+    padding: 0 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    font-size: 11px;
+    color: var(--text-secondary);
+    gap: 12px;
+    flex-shrink: 0;
+    background: var(--bg);
+  }
+
+  .progress-inline {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .progress-mini {
+    width: 60px;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-mini-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 2px;
+  }
+
+  .sep { color: var(--border); }
+
+  /* ===== Empty State ===== */
+  .empty-grid {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .empty-box {
+    text-align: center;
+    padding: 48px;
+    border: 2px dashed var(--border);
+    border-radius: 16px;
+    max-width: 320px;
+  }
+  .empty-box .big-icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-box p { font-size: 14px; color: var(--text-secondary); margin-bottom: 4px; }
+  .empty-box .hint { font-size: 12px; color: var(--text-secondary); margin-bottom: 20px; }
+
+  .import-btn {
+    padding: 10px 24px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .import-btn:hover { opacity: 0.85; }
+
+  /* Search Results Label */
+  .search-results-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding: 8px 0 4px 2px;
+  }
+  .search-results-label strong { color: var(--text); }
+
+  .search-hint {
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding: 8px 0 0 2px;
+  }
+
+  /* Tab nav */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .tab {
+    padding: 10px 24px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+</style>
+</head>
+<body>
+
+<div class="tabs">
+  <div class="tab active" onclick="show(0)">主界面</div>
+  <div class="tab" onclick="show(1)">搜索状态</div>
+  <div class="tab" onclick="show(2)">空状态</div>
+  <div class="tab" onclick="show(3)">详情面板 — 标记</div>
+</div>
+
+<!-- ==================== VIEW 0: Main Interface ==================== -->
+<div class="app" id="v0">
+  <div class="search-bar">
+    <span class="icon">🔍</span>
+    <input type="text" placeholder="搜索照片...">
+    <span class="shortcut">⌘F</span>
+  </div>
+  <div class="main">
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <h3>📥 导入</h3>
+        <div class="sidebar-item">
+          <span class="emoji">📷</span>
+          <span class="label">iPhone</span>
+          <span class="meta">12张</span>
+        </div>
+        <div class="device-bar"><div class="device-bar-fill" style="width:80%"></div></div>
+        <div class="divider" style="margin-top:12px"></div>
+      </div>
+      <div class="sidebar-section">
+        <h3>💾 存储</h3>
+        <div class="sidebar-item">
+          <span class="status-dot on"></span>
+          <span class="label">本地</span>
+        </div>
+        <div class="sub">~/PhotoVault/ · 31张 2.1G</div>
+        <div class="sidebar-item">
+          <span class="status-dot off"></span>
+          <span class="label">WebDAV</span>
+          <span class="meta">未配置</span>
+        </div>
+        <div class="sidebar-item">
+          <span class="status-dot off"></span>
+          <span class="label">S3</span>
+          <span class="meta">未配置</span>
+        </div>
+      </div>
+    </div>
+    <div class="grid-area">
+      <div class="date-group">
+        <div class="date-label">2026年4月15日 · 23张</div>
+        <div class="grid">
+          <div class="thumb selected"><div class="photo">🏔️</div></div>
+          <div class="thumb"><div class="photo">🌅</div><span class="badge good">⭐</span></div>
+          <div class="thumb"><div class="photo">🐕</div></div>
+          <div class="thumb"><div class="photo">🌸</div></div>
+          <div class="thumb"><div class="photo">🍜</div><span class="loading-indicator">◎</span></div>
+          <div class="thumb"><div class="photo">🏠</div></div>
+          <div class="thumb"><div class="photo">🌊</div></div>
+          <div class="thumb"><div class="photo">☁️</div><span class="dup-icon">≡</span></div>
+          <div class="thumb"><div class="photo">🎸</div></div>
+          <div class="thumb"><div class="photo">🚗</div></div>
+          <div class="thumb"><div class="photo">📚</div></div>
+          <div class="thumb"><div class="photo">☕</div></div>
+        </div>
+      </div>
+      <div class="date-group">
+        <div class="date-label">2026年4月12日 · 8张</div>
+        <div class="grid">
+          <div class="thumb"><div class="photo">🎂</div></div>
+          <div class="thumb"><div class="photo">🎈</div></div>
+          <div class="thumb"><div class="photo">👨‍👩‍👧</div></div>
+          <div class="thumb"><div class="photo">🎁</div></div>
+          <div class="thumb"><div class="photo">🍰</div></div>
+          <div class="thumb"><div class="photo">🥂</div><span class="badge bad">✕</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="detail">
+      <div class="detail-preview">🏔️</div>
+      <div class="detail-body">
+        <div class="detail-section">
+          <h4>📷 拍摄信息</h4>
+          <div class="exif-grid">
+            <div class="exif-item"><div class="label">机身</div><div class="value">Sony A7IV</div></div>
+            <div class="exif-item"><div class="label">镜头</div><div class="value">FE 24-70mm</div></div>
+            <div class="exif-item"><div class="label">光圈</div><div class="value">f/2.8</div></div>
+            <div class="exif-item"><div class="label">快门</div><div class="value">1/250s</div></div>
+            <div class="exif-item"><div class="label">ISO</div><div class="value">400</div></div>
+            <div class="exif-item"><div class="label">焦距</div><div class="value">35mm</div></div>
+          </div>
+        </div>
+        <div class="mark-buttons">
+          <button class="mark-btn good-active">⭐ 好片</button>
+          <button class="mark-btn">🗑️ 废片</button>
+        </div>
+        <div class="detail-section">
+          <h4>🤖 AI 描述</h4>
+          <div class="detail-desc">雪山远景，前景有草地和野花，天空晴朗，光线柔和，适合风光摄影。</div>
+        </div>
+        <div class="detail-section">
+          <h4>📊 质量评分</h4>
+          <div class="score-bar">
+            <span>87/100</span>
+            <div class="score-track"><div class="score-fill" style="width:87%"></div></div>
+          </div>
+        </div>
+        <div class="meta-row">
+          <span>📍 GPS: 有</span>
+          <span>📅 2026-04-15 17:32</span>
+        </div>
+        <a class="finder-link">在 Finder 中显示 →</a>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar">
+    <span>📸 31 张照片</span>
+    <span class="sep">·</span>
+    <span>EXIF 已提取</span>
+    <span class="sep">·</span>
+    <span class="progress-inline">AI 索引：24/31 <div class="progress-mini"><div class="progress-mini-fill" style="width:77%"></div></div> 剩余 ~2 分钟</span>
+  </div>
+</div>
+
+<!-- ==================== VIEW 1: Search ==================== -->
+<div class="app" id="v1" style="display:none">
+  <div class="search-bar">
+    <span class="icon">🔍</span>
+    <input type="text" value="夕阳" placeholder="搜索照片...">
+    <span class="shortcut">⌘F</span>
+    <span class="clear-btn" style="display:inline">✕</span>
+  </div>
+  <div class="main">
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <h3>📥 导入</h3>
+        <div class="sidebar-item">
+          <span class="status-dot on"></span>
+          <span class="label">本地</span>
+        </div>
+        <div class="sub">31张 2.1G</div>
+      </div>
+    </div>
+    <div class="grid-area">
+      <div class="search-results-label">找到 <strong>5</strong> 张相关照片</div>
+      <div class="grid">
+        <div class="thumb selected"><div class="photo">🌅</div><span class="badge good">⭐</span></div>
+        <div class="thumb"><div class="photo">🌇</div></div>
+        <div class="thumb"><div class="photo">🌄</div></div>
+        <div class="thumb"><div class="photo">🌅</div></div>
+        <div class="thumb"><div class="photo">🌆</div></div>
+      </div>
+      <div class="search-hint">💡 也可以搜索 "海边"、"宠物"、"生日"</div>
+    </div>
+    <div class="detail">
+      <div class="detail-preview">🌅</div>
+      <div class="detail-body">
+        <div class="detail-section">
+          <h4>📷 拍摄信息</h4>
+          <div class="exif-grid">
+            <div class="exif-item"><div class="label">机身</div><div class="value">Sony A7IV</div></div>
+            <div class="exif-item"><div class="label">镜头</div><div class="value">FE 24-70mm</div></div>
+            <div class="exif-item"><div class="label">光圈</div><div class="value">f/8</div></div>
+            <div class="exif-item"><div class="label">快门</div><div class="value">1/60s</div></div>
+            <div class="exif-item"><div class="label">ISO</div><div class="value">200</div></div>
+            <div class="exif-item"><div class="label">焦距</div><div class="value">50mm</div></div>
+          </div>
+        </div>
+        <div class="mark-buttons">
+          <button class="mark-btn good-active">⭐ 好片</button>
+          <button class="mark-btn">🗑️ 废片</button>
+        </div>
+        <div class="detail-section">
+          <h4>🤖 AI 描述</h4>
+          <div class="detail-desc">日落时分的海边，天空被染成橙红色，水面反射出金色光芒，远处有帆船剪影。</div>
+        </div>
+        <div class="detail-section">
+          <h4>📊 质量评分</h4>
+          <div class="score-bar">
+            <span>92/100</span>
+            <div class="score-track"><div class="score-fill" style="width:92%"></div></div>
+          </div>
+        </div>
+        <div class="meta-row">
+          <span>📍 GPS: 有</span>
+          <span>📅 2026-04-15 18:45</span>
+        </div>
+        <a class="finder-link">在 Finder 中显示 →</a>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar">
+    <span>🔍 搜索结果：5 张</span>
+    <span class="sep">·</span>
+    <span>来自 AI 索引描述 + EXIF 标签</span>
+  </div>
+</div>
+
+<!-- ==================== VIEW 2: Empty State ==================== -->
+<div class="app" id="v2" style="display:none">
+  <div class="search-bar">
+    <span class="icon">🔍</span>
+    <input type="text" placeholder="搜索照片...">
+    <span class="shortcut">⌘F</span>
+  </div>
+  <div class="main">
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <h3>📥 导入</h3>
+      </div>
+      <div class="sidebar-section">
+        <h3>💾 存储</h3>
+        <div class="sidebar-item">
+          <span class="status-dot on"></span>
+          <span class="label">本地</span>
+        </div>
+        <div class="sub">0 张</div>
+      </div>
+    </div>
+    <div class="empty-grid">
+      <div class="empty-box">
+        <div class="big-icon">📸</div>
+        <p>拖拽照片文件夹到这里</p>
+        <p class="hint">或点击下方按钮开始</p>
+        <button class="import-btn">导入照片</button>
+      </div>
+    </div>
+    <div class="detail hidden"></div>
+  </div>
+  <div class="status-bar">
+    <span>📸 0 张照片</span>
+  </div>
+</div>
+
+<!-- ==================== VIEW 3: Detail Panel — Mark States ==================== -->
+<div class="app" id="v3" style="display:none">
+  <div class="search-bar">
+    <span class="icon">🔍</span>
+    <input type="text" placeholder="搜索照片...">
+    <span class="shortcut">⌘F</span>
+  </div>
+  <div class="main">
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <h3>📥 导入</h3>
+      </div>
+      <div class="sidebar-section">
+        <h3>💾 存储</h3>
+        <div class="sidebar-item">
+          <span class="status-dot on"></span>
+          <span class="label">本地</span>
+        </div>
+        <div class="sub">31张 2.1G</div>
+      </div>
+    </div>
+    <div class="grid-area">
+      <div class="date-group">
+        <div class="date-label">2026年4月15日 · 23张</div>
+        <div class="grid">
+          <div class="thumb"><div class="photo">🏔️</div></div>
+          <div class="thumb"><div class="photo">🌅</div><span class="badge good">⭐</span></div>
+          <div class="thumb"><div class="photo">🐕</div></div>
+          <div class="thumb selected"><div class="photo">🌸</div></div>
+          <div class="thumb"><div class="photo">🍜</div></div>
+          <div class="thumb"><div class="photo">🏠</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="detail">
+      <div class="detail-preview">🌸</div>
+      <div class="detail-body">
+        <div class="detail-section">
+          <h4>📷 拍摄信息</h4>
+          <div class="exif-grid">
+            <div class="exif-item"><div class="label">机身</div><div class="value">iPhone 15 Pro</div></div>
+            <div class="exif-item"><div class="label">镜头</div><div class="value">主摄 24mm</div></div>
+            <div class="exif-item"><div class="label">光圈</div><div class="value">f/1.8</div></div>
+            <div class="exif-item"><div class="label">快门</div><div class="value">1/500s</div></div>
+            <div class="exif-item"><div class="label">ISO</div><div class="value">64</div></div>
+            <div class="exif-item"><div class="label">焦距</div><div class="value">24mm</div></div>
+          </div>
+        </div>
+        <div class="mark-buttons">
+          <button class="mark-btn">⭐ 好片</button>
+          <button class="mark-btn bad-active">🗑️ 废片</button>
+        </div>
+        <div class="detail-section">
+          <h4>🤖 AI 描述</h4>
+          <div class="detail-desc">微距拍摄的粉色花朵，花瓣细节清晰，背景虚化柔和，构图略微偏左。</div>
+        </div>
+        <div class="detail-section">
+          <h4>📊 质量评分</h4>
+          <div class="score-bar">
+            <span>43/100</span>
+            <div class="score-track"><div class="score-fill" style="width:43%;background:var(--bad)"></div></div>
+          </div>
+        </div>
+        <div class="meta-row">
+          <span>📍 GPS: 无</span>
+          <span>📅 2026-04-15 14:20</span>
+        </div>
+        <a class="finder-link">在 Finder 中显示 →</a>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar">
+    <span>📸 31 张照片</span>
+    <span class="sep">·</span>
+    <span>EXIF 已提取</span>
+    <span class="sep">·</span>
+    <span>AI 索引已完成</span>
+  </div>
+</div>
+
+<script>
+function show(i) {
+  document.querySelectorAll('.app').forEach((el, idx) => el.style.display = idx === i ? '' : 'none');
+  document.querySelectorAll('.tab').forEach((el, idx) => el.classList.toggle('active', idx === i));
+}
+</script>
+
+</body>
+</html>
