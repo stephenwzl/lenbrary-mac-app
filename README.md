@@ -41,4 +41,7 @@ npm run dev
 
 ## 文档
 
-详细产品/设计/PRD 文档见 [personal-runtime/](../personal-runtime/) 目录。
+- [PRODUCT.md](docs/PRODUCT.md) — 产品概览 & ROADMAP
+- [DESIGN.md](docs/DESIGN.md) — 设计语言
+- [PRD-MVP.md](docs/PRD-MVP.md) — MVP 需求 (v0.1)
+- [PRD-V2.md](docs/PRD-V2.md) — 后续版本规划 (v0.2 ~ v1.0)
